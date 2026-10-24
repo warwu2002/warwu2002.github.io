@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warren Wu | Computer Science Graduate & Databases Specialist</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        accent: {
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                        },
+                        indigoAcc: {
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Modern backdrop blur and sleek dark mode gradients */
+        body {
+            background-color: #0b0f17;
+            color: #f1f5f9;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #38bdf8 0%, #818cf8 50%, #c084fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .glass-card {
+            background: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .glass-card:hover {
+            border-color: rgba(56, 189, 248, 0.3);
+        }
+
+        /* Toast notification popup */
+        #toast {
+            visibility: hidden;
+            min-width: 240px;
+            transform: translateY(100%);
+            transition: transform 0.3s ease-in-out, visibility 0.3s;
+        }
+        #toast.show {
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        /* Print formatting optimization */
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            body {
+                background-color: #ffffff !important;
+                color: #0f172a !important;
+                font-size: 11pt;
+            }
+            .glass-card {
+                background: #ffffff !important;
+                border: 1px solid #e2e8f0 !important;
+                box-shadow: none !important;
+                color: #0f172a !important;
+            }
+            .gradient-text {
+                -webkit-text-fill-color: #0284c7 !important;
+                background: none !important;
+            }
+            h1, h2, h3, h4, strong {
+                color: #0f172a !important;
+            }
+            p, span, li {
+                color: #334155 !important;
+            }
+        }
+    </style>
+</head>
+<body class="font-sans antialiased min-h-screen flex flex-col selection:bg-accent-500 selection:text-white">
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-5 right-5 z-50 flex items-center gap-3 bg-slate-800 text-slate-100 border border-slate-700 px-4 py-3 rounded-xl shadow-2xl no-print">
+        <i class="fa-solid fa-circle-check text-emerald-400 text-lg"></i>
+        <span id="toastMessage" class="text-sm font-medium">Copied to clipboard!</span>
+    </div>
+
+    <!-- Navigation Bar -->
+    <header class="sticky top-0 z-40 backdrop-blur-xl bg-slate-950/80 border-b border-slate-800/80 transition-colors no-print">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Branding -->
+                <a href="#hero" class="text-xl font-bold tracking-tight text-white flex items-center gap-2 group">
+                    <span class="w-9 h-9 rounded-xl bg-gradient-to-tr from-accent-500 to-indigoAcc-500 text-white flex items-center justify-center font-extrabold text-base shadow-lg shadow-accent-500/20 group-hover:scale-105 transition-transform">WW</span>
+                    <span class="font-bold tracking-wide">Warren<span class="text-accent-400">.Wu</span></span>
+                </a>
+
+                <!-- Desktop Nav Navigation -->
+                <nav class="hidden md:flex items-center space-x-6 text-sm font-medium text-slate-300">
+                    <a href="#about" class="hover:text-accent-400 transition-colors">About</a>
+                    <a href="#experience" class="hover:text-accent-400 transition-colors">Experience</a>
+                    <a href="#skills" class="hover:text-accent-400 transition-colors">Skills</a>
+                    <a href="#education" class="hover:text-accent-400 transition-colors">Education & Interests</a>
+                    <a href="#contact" class="hover:text-accent-400 transition-colors">Contact</a>
+                </nav>
+
+                <!-- Action Button -->
+                <div class="flex items-center space-x-3">
+                    <button onclick="window.print()" class="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold text-slate-900 bg-accent-400 hover:bg-sky-300 rounded-lg shadow-lg shadow-accent-500/20 hover:shadow-accent-500/30 transition-all active:scale-95">
+                        <i class="fa-solid fa-file-pdf"></i>
+                        <span>Download / Print PDF</span>
+                    </button>
+
+                    <!-- Mobile Menu Button -->
+                    <button id="mobileMenuBtn" aria-label="Toggle Navigation Menu" class="md:hidden p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 focus:outline-none">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobileMenu" class="hidden md:hidden bg-slate-900/95 border-b border-slate-800 px-4 pt-2 pb-4 space-y-2">
+            <a href="#about" class="mobile-nav-link block px-3 py-2 rounded-lg text-base font-medium text-slate-300 hover:bg-slate-800 hover:text-white">About</a>
+            <a href="#experience" class="mobile-nav-link block px-3 py-2 rounded-lg text-base font-medium text-slate-300 hover:bg-slate-800 hover:text-white">Experience</a>
+            <a href="#skills" class="mobile-nav-link block px-3 py-2 rounded-lg text-base font-medium text-slate-300 hover:bg-slate-800 hover:text-white">Skills</a>
+            <a href="#education" class="mobile-nav-link block px-3 py-2 rounded-lg text-base font-medium text-slate-300 hover:bg-slate-800 hover:text-white">Education & Interests</a>
+            <a href="#contact" class="mobile-nav-link block px-3 py-2 rounded-lg text-base font-medium text-slate-300 hover:bg-slate-800 hover:text-white">Contact</a>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12 flex-grow w-full">
+
+        <!-- Hero Section -->
+        <section id="hero" class="pt-6 pb-2">
+            <div class="glass-card rounded-3xl p-6 sm:p-10 relative overflow-hidden">
+                <!-- Glowing ambient background lights -->
+                <div class="absolute -top-24 -right-24 w-72 h-72 bg-accent-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="absolute -bottom-24 -left-24 w-72 h-72 bg-indigoAcc-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+                <div class="flex flex-col md:flex-row items-center md:items-start gap-8 relative z-10">
+                    <!-- Avatar / Headshot Image -->
+                    <div class="relative group">
+                        <div class="w-32 h-32 sm:w-40 sm:h-40 rounded-2xl border-2 border-slate-700/80 shadow-2xl relative overflow-hidden bg-slate-800">
+                            <img 
+                                src="headshot.jpg" 
+                                alt="Warren Wu Headshot" 
+                                class="w-full h-full object-cover rounded-2xl transition-transform duration-300 group-hover:scale-105"
+                            />
+                            <div class="absolute bottom-0 inset-x-0 h-1 bg-gradient-to-r from-accent-400 via-indigoAcc-500 to-purple-500"></div>
+                        </div>
+                        <div class="absolute -bottom-2 -right-2 px-2.5 py-0.5 bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 text-xs font-semibold rounded-full flex items-center gap-1.5 backdrop-blur-md z-10">
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                            Open to Roles
+                        </div>
+                    </div>
+
+                    <!-- Intro Info -->
+                    <div class="flex-1 text-center md:text-left space-y-4">
+                        <div>
+                            <div class="inline-flex items-center gap-2 px-3 py-1 mb-3 text-xs font-semibold tracking-wider text-accent-400 uppercase bg-accent-500/10 border border-accent-500/20 rounded-full">
+                                <i class="fa-solid fa-graduation-cap"></i> B.S. Computer Science Graduate
+                            </div>
+                            <h1 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
+                                Warren Wu
+                            </h1>
+                            <p class="text-lg sm:text-xl text-slate-300 font-medium mt-1">
+                                Computer Science & Math Graduate | Databases Specialist & Systems Developer
+                            </p>
+                        </div>
+
+                        <!-- Contact Badges -->
+                        <div class="flex flex-wrap justify-center md:justify-start gap-2.5 text-xs sm:text-sm text-slate-300">
+                            <span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700/60">
+                                <i class="fa-solid fa-location-dot text-accent-400"></i> Cleveland, OH 44114
+                            </span>
+                            <button onclick="copyText('WarrenWu2002@gmail.com', 'Email address copied!')" class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700/60 hover:bg-slate-700/80 hover:text-accent-400 transition-colors group" title="Click to Copy Email">
+                                <i class="fa-solid fa-envelope text-accent-400"></i> WarrenWu2002@gmail.com
+                                <i class="fa-regular fa-copy opacity-0 group-hover:opacity-100 transition-opacity text-xs ml-1"></i>
+                            </button>
+                            <button onclick="copyText('(216) 972-8400', 'Phone number copied!')" class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700/60 hover:bg-slate-700/80 hover:text-accent-400 transition-colors group" title="Click to Copy Phone">
+                                <i class="fa-solid fa-phone text-accent-400"></i> (216) 972-8400
+                                <i class="fa-regular fa-copy opacity-0 group-hover:opacity-100 transition-opacity text-xs ml-1"></i>
+                            </button>
+                        </div>
+
+                        <!-- Hero CTA buttons -->
+                        <div class="flex flex-wrap items-center justify-center md:justify-start gap-3 pt-2 no-print">
+                            <a href="#contact" class="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold rounded-xl bg-gradient-to-r from-accent-500 to-indigoAcc-500 text-white hover:opacity-90 shadow-lg shadow-accent-500/25 transition-all">
+                                <i class="fa-solid fa-paper-plane"></i> Get in Touch
+                            </a>
+                            <a href="#experience" class="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-all">
+                                View Experience
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Summary Section -->
+        <section id="about" class="scroll-mt-20">
+            <div class="glass-card rounded-2xl p-6 sm:p-8">
+                <h2 class="text-xl sm:text-2xl font-bold text-white flex items-center gap-3 mb-4">
+                    <i class="fa-solid fa-user text-accent-400"></i>
+                    Professional Profile
+                </h2>
+                <p class="text-slate-300 leading-relaxed text-sm sm:text-base">
+                    Motivated college graduate with a Bachelor of Science in Computer Science from Cleveland State University (Minored in Mathematics). Currently seeking an opportunity to apply skills in database management, software development, IT hardware refurbishment, audio/KTV systems setup, and technical team leadership to tackle challenging assignments and support dynamic teams.
+                </p>
+            </div>
+        </section>
+
+        <!-- Experience Section -->
+        <section id="experience" class="scroll-mt-20">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-xl sm:text-2xl font-bold text-white flex items-center gap-3">
+                    <i class="fa-solid fa-briefcase text-accent-400"></i>
+                    Work & Leadership Experience
+                </h2>
+            </div>
+
+            <!-- Experience Cards Container -->
+            <div class="space-y-6">
+
+                <!-- Featured Capstone Project -->
+                <div class="glass-card p-6 sm:p-8 rounded-2xl relative overflow-hidden border-l-4 border-l-accent-400">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+                        <div>
+                            <span class="inline-block px-2.5 py-0.5 mb-1.5 text-[11px] font-bold uppercase tracking-wider text-accent-400 bg-accent-500/10 rounded-md">Featured Project Leadership</span>
+                            <h3 class="text-lg sm:text-xl font-bold text-white">Capstone Project Team Leader</h3>
+                        </div>
+                        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-slate-800 text-slate-300 border border-slate-700/80 w-fit">
+                            2024 – 2025
+                        </span>
+                    </div>
+                    <div class="text-sm font-medium text-slate-400 mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-rocket text-indigoAcc-500"></i> NASA / UC Berkeley Collaboration
+                    </div>
+                    <ul class="space-y-2 text-slate-300 text-sm leading-relaxed">
+                        <li class="flex items-start gap-2.5">
+                            <i class="fa-solid fa-chevron-right text-accent-400 text-xs mt-1"></i>
+                            <span>Managed project budgets, allocating technical resources effectively to keep milestones on schedule and prevent overspending.</span>
+                        </li>
+                        <li class="flex items-start gap-2.5">
+                            <i class="fa-solid fa-chevron-right text-accent-400 text-xs mt-1"></i>
+                            <span>Led the design and creation of core interactive Assets, User Interface layout, and Scene Management logic.</span>
+                        </li>
+                        <li class="flex items-start gap-2.5">
+                            <i class="fa-solid fa-chevron-right text-accent-400 text-xs mt-1"></i>
+                            <span>Coordinated team deliverables, facilitating technical problem-solving across group members.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- PCs For People -->
+                <div class="glass-card p-6 sm:p-8 rounded-2xl">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+                        <h3 class="text-lg font-bold text-white">PCs For People Volunteer</h3>
+                        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-slate-800 text-slate-300 border border-slate-700/80 w-fit">
+                            2026 – Present
+                        </span>
+                    </div>
+                    <div class="text-sm font-medium text-slate-400 mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-screwdriver-wrench text-accent-400"></i> Hardware Refurbishment & Data Security
+                    </div>
+                    <ul class="space-y-2 text-slate-300 text-sm leading-relaxed">
+                        <li class="flex items-start gap-2.5">
+                            <i class="fa-solid fa-chevron-right text-accent-400 text-xs mt-1"></i>
+                            <span>Conducted intake, hardware diagnostic, and refurbishment for desktops, laptops, and printers.</span>
+                        </li>
+                        <li class="flex items-start gap-2.5">
+                            <i class="fa-solid fa-chevron-right text-accent-400 text-xs mt-1"></i>
+                            <span>Executed secure data handling procedures, disk wiping standards, and certified data destruction protocols.</span>
+                        </li>
+                        <li class="flex items-start gap-2.5">
+                            <i class="fa-solid fa-chevron-right text-accent-400 text-xs mt-1"></i>
+                            <span>Performed component-level troubleshooting, repair, hardware replacement, and system testing.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Galaxy KTV -->
+                <div class="glass-card p-6 sm:p-8 rounded-2xl">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+                        <h3 class="text-lg font-bold text-white">Technical Specialist / System Support</h3>
+                        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-slate-800 text-slate-300 border border-slate-700/80 w-fit">
+                            2026 – Present
+                        </span>
+                    </div>
+                    <div class="text-sm font-medium text-slate-400 mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-music text-purple-400"></i> Galaxy KTV
+                    </div>
+                    <ul class="space-y-2 text-slate-300 text-sm leading-relaxed">
+                        <li class="flex items-start gap-2.5">
+                            <i class="fa-solid fa-chevron-right text-accent-400 text-xs mt-1"></i>
+                            <span>Maintained and hardware-troubleshot specialized karaoke terminal machines and digital system infrastructure.</span>
+                        </li>
+                        <li class="flex items-start gap-2.5">
+                            <i class="fa-solid fa-chevron-right text-accent-400 text-xs mt-1"></i>
+                            <span>Managed audio setup, signal routing, mixer levels, and speaker audio quality control.</span>
+                        </li>
+                        <li class="flex items-start gap-2.5">
+                            <i class="fa-solid fa-chevron-right text-accent-400 text-xs mt-1"></i>
+                            <span>Provided software updates, database song library indexing, and machine troubleshooting support.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- STEM Peer Teacher -->
+                <div class="glass-card p-6 sm:p-8 rounded-2xl">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+                        <h3 class="text-lg font-bold text-white">STEM Peer Teacher</h3>
+                        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-slate-800 text-slate-300 border border-slate-700/80 w-fit">
+                            2021 – 2023
+                        </span>
+                    </div>
+                    <div class="text-sm font-medium text-slate-400 mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-chalkboard-user text-emerald-400"></i> Cleveland State University - Mathematics Dept.
+                    </div>
+                    <ul class="space-y-2 text-slate-300 text-sm leading-relaxed">
+                        <li class="flex items-start gap-2.5">
+                            <i class="fa-solid fa-chevron-right text-accent-400 text-xs mt-1"></i>
+                            <span>Managed classroom dynamics, fostering an engaging and positive math learning environment.</span>
+                        </li>
+                        <li class="flex items-start gap-2.5">
+                            <i class="fa-solid fa-chevron-right text-accent-400 text-xs mt-1"></i>
+                            <span>Maintained precise academic records, student grades, attendance, and required documentation.</span>
+                        </li>
+                        <li class="flex items-start gap-2.5">
+                            <i class="fa-solid fa-chevron-right text-accent-400 text-xs mt-1"></i>
+                            <span>Evaluated student progress through quizzes, examinations, and structured individualized assessments.</span>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Technical Skills Section -->
+        <section id="skills" class="scroll-mt-20">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                <h2 class="text-xl sm:text-2xl font-bold text-white flex items-center gap-3">
+                    <i class="fa-solid fa-laptop-code text-accent-400"></i>
+                    Technical Skills & Proficiencies
+                </h2>
+
+                <!-- Interactive Skill Filter Tabs -->
+                <div class="flex flex-wrap gap-1.5 bg-slate-900/80 p-1 rounded-xl border border-slate-800 no-print" id="skillFilters">
+                    <button data-filter="all" class="skill-btn active px-3 py-1.5 text-xs font-medium rounded-lg bg-accent-500 text-white transition-all">All</button>
+                    <button data-filter="dev" class="skill-btn px-3 py-1.5 text-xs font-medium rounded-lg text-slate-400 hover:text-white transition-all">Engineering & Dev</button>
+                    <button data-filter="it" class="skill-btn px-3 py-1.5 text-xs font-medium rounded-lg text-slate-400 hover:text-white transition-all">IT & Hardware</button>
+                    <button data-filter="ai" class="skill-btn px-3 py-1.5 text-xs font-medium rounded-lg text-slate-400 hover:text-white transition-all">AI & Design</button>
+                    <button data-filter="audio" class="skill-btn px-3 py-1.5 text-xs font-medium rounded-lg text-slate-400 hover:text-white transition-all">Audio & Soft Skills</button>
+                </div>
+            </div>
+
+            <!-- Skills Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="skillsGrid">
+
+                <!-- Hardware & IT Repair -->
+                <div class="skill-card glass-card p-5 rounded-2xl flex items-start gap-4" data-cat="it">
+                    <div class="w-10 h-10 rounded-xl bg-accent-500/10 border border-accent-500/20 text-accent-400 flex items-center justify-center shrink-0 text-lg">
+                        <i class="fa-solid fa-microchip"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-bold text-white">Hardware & IT Repair</h3>
+                        <p class="text-xs text-slate-400 mt-1">PC/Server Building, Laptop/Desktop Refurbishment, Component Repair, Printer Setup</p>
+                    </div>
+                </div>
+
+                <!-- Data Handling & Destruction -->
+                <div class="skill-card glass-card p-5 rounded-2xl flex items-start gap-4" data-cat="it">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 text-lg">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-bold text-white">Data Handling & Wipe</h3>
+                        <p class="text-xs text-slate-400 mt-1">Secure Data Destruction, Drive Sanitization Protocols, IT Asset Management</p>
+                    </div>
+                </div>
+
+                <!-- Database & Software -->
+                <div class="skill-card glass-card p-5 rounded-2xl flex items-start gap-4" data-cat="dev">
+                    <div class="w-10 h-10 rounded-xl bg-indigoAcc-500/10 border border-indigoAcc-500/20 text-indigoAcc-500 flex items-center justify-center shrink-0 text-lg">
+                        <i class="fa-solid fa-database"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-bold text-white">Database & Applications</h3>
+                        <p class="text-xs text-slate-400 mt-1">Database Management, Microsoft Access, Excel, PowerPoint, General Applications</p>
+                    </div>
+                </div>
+
+                <!-- AI Training & Modelling -->
+                <div class="skill-card glass-card p-5 rounded-2xl flex items-start gap-4" data-cat="ai">
+                    <div class="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center justify-center shrink-0 text-lg">
+                        <i class="fa-solid fa-brain"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-bold text-white">AI Training & Modelling</h3>
+                        <p class="text-xs text-slate-400 mt-1">Model Fine-tuning, Dataset Preparation, AI Workflows & Prompt Alignment</p>
+                    </div>
+                </div>
+
+                <!-- Game Design & UI/Scene -->
+                <div class="skill-card glass-card p-5 rounded-2xl flex items-start gap-4" data-cat="ai">
+                    <div class="w-10 h-10 rounded-xl bg-pink-500/10 border border-pink-500/20 text-pink-400 flex items-center justify-center shrink-0 text-lg">
+                        <i class="fa-solid fa-gamepad"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-bold text-white">Game Design & Assets</h3>
+                        <p class="text-xs text-slate-400 mt-1">UI/UX Layouts, Scene Management, Asset Creation, Interactive Simulations</p>
+                    </div>
+                </div>
+
+                <!-- Audio & KTV Systems -->
+                <div class="skill-card glass-card p-5 rounded-2xl flex items-start gap-4" data-cat="audio">
+                    <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center shrink-0 text-lg">
+                        <i class="fa-solid fa-sliders"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-bold text-white">Audio & KTV Systems</h3>
+                        <p class="text-xs text-slate-400 mt-1">Karaoke Machine Maintenance, Audio Setup & Mixing, System Troubleshooting</p>
+                    </div>
+                </div>
+
+                <!-- Leadership & Budgeting -->
+                <div class="skill-card glass-card p-5 rounded-2xl flex items-start gap-4" data-cat="audio">
+                    <div class="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center shrink-0 text-lg">
+                        <i class="fa-solid fa-users-gear"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-bold text-white">Leadership & Coordination</h3>
+                        <p class="text-xs text-slate-400 mt-1">Budget Allocation, Project Scheduling, Coordination in Large Groups, Peer Mentoring</p>
+                    </div>
+                </div>
+
+                <!-- IT Troubleshooting & Support -->
+                <div class="skill-card glass-card p-5 rounded-2xl flex items-start gap-4" data-cat="it">
+                    <div class="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 flex items-center justify-center shrink-0 text-lg">
+                        <i class="fa-solid fa-headset"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-bold text-white">IT Support & Customer Service</h3>
+                        <p class="text-xs text-slate-400 mt-1">Basic & Intermediate IT Problem Solving, Tech Support, Client & Customer Services</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Education & Interests Section -->
+        <section id="education" class="scroll-mt-20">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                <!-- Education Column -->
+                <div class="space-y-4">
+                    <h2 class="text-xl sm:text-2xl font-bold text-white flex items-center gap-3">
+                        <i class="fa-solid fa-graduation-cap text-accent-400"></i>
+                        Education
+                    </h2>
+                    
+                    <div class="glass-card p-6 rounded-2xl relative overflow-hidden">
+                        <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-accent-500/20 to-indigoAcc-500/20 border border-accent-500/30 flex items-center justify-center text-accent-400 mb-4 text-xl">
+                            <i class="fa-solid fa-university"></i>
+                        </div>
+                        <span class="text-xs font-semibold px-2.5 py-1 rounded bg-slate-800 text-accent-400 border border-slate-700/80">
+                            Graduated Dec 2025
+                        </span>
+                        <h3 class="text-lg font-bold text-white mt-3">Bachelor of Computer Science</h3>
+                        <p class="text-sm text-slate-300 font-medium mt-1">Cleveland State University</p>
+                        <div class="mt-4 pt-4 border-t border-slate-800 flex items-center gap-2 text-xs text-slate-400">
+                            <i class="fa-solid fa-square-root-variable text-indigoAcc-400"></i>
+                            <span>Minor in <strong class="text-slate-200">Mathematics</strong></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Personal Interests Column -->
+                <div class="space-y-4">
+                    <h2 class="text-xl sm:text-2xl font-bold text-white flex items-center gap-3">
+                        <i class="fa-solid fa-heart text-accent-400"></i>
+                        Technical Interests
+                    </h2>
+
+                    <div class="glass-card p-6 rounded-2xl">
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="p-3.5 bg-slate-900/80 rounded-xl border border-slate-800/80 flex items-center gap-3">
+                                <i class="fa-solid fa-server text-accent-400"></i>
+                                <span class="text-xs font-semibold text-slate-200">Server Building</span>
+                            </div>
+                            <div class="p-3.5 bg-slate-900/80 rounded-xl border border-slate-800/80 flex items-center gap-3">
+                                <i class="fa-solid fa-desktop text-indigoAcc-400"></i>
+                                <span class="text-xs font-semibold text-slate-200">PC Building</span>
+                            </div>
+                            <div class="p-3.5 bg-slate-900/80 rounded-xl border border-slate-800/80 flex items-center gap-3">
+                                <i class="fa-solid fa-robot text-purple-400"></i>
+                                <span class="text-xs font-semibold text-slate-200">AI Training & Modelling</span>
+                            </div>
+                            <div class="p-3.5 bg-slate-900/80 rounded-xl border border-slate-800/80 flex items-center gap-3">
+                                <i class="fa-solid fa-gamepad text-pink-400"></i>
+                                <span class="text-xs font-semibold text-slate-200">Game Design</span>
+                            </div>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 leading-relaxed">
+                            Enthusiastically engaged in custom server hardware, rig assembly, training localized artificial intelligence models, and exploring game mechanics.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="scroll-mt-20 print-card">
+            <div class="glass-card rounded-3xl p-6 sm:p-10 relative overflow-hidden text-center">
+                <div class="max-w-xl mx-auto space-y-4">
+                    <span class="inline-block px-3 py-1 text-xs font-semibold tracking-wider text-accent-400 uppercase bg-accent-500/10 rounded-full">
+                        Let's Connect
+                    </span>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white">
+                        Interested in working together?
+                    </h2>
+                    <p class="text-sm sm:text-base text-slate-300">
+                        Feel free to reach out directly via email or phone for career opportunities, technical projects, or IT consulting.
+                    </p>
+
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+                        <a href="mailto:WarrenWu2002@gmail.com" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-accent-500 hover:bg-accent-600 text-white font-semibold text-sm shadow-lg shadow-accent-500/25 transition-all">
+                            <i class="fa-solid fa-envelope"></i> Send Email
+                        </a>
+                        <a href="tel:2169728400" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-sm transition-all">
+                            <i class="fa-solid fa-phone"></i> Call (216) 972-8400
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800/80 bg-slate-950 py-6 text-center text-xs text-slate-400 no-print transition-colors mt-12">
+        <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <p>© <span id="currentYear"></span> Warren Wu. All rights reserved.</p>
+            <p>1588 E 38th Street, Cleveland OH 44114</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Dynamic Footer Year
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        // Mobile Nav Toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        mobileNavLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // Copy To Clipboard Function
+        function copyText(text, message) {
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(text);
+            } else {
+                let textArea = document.createElement("textarea");
+                textArea.value = text;
+                textArea.style.position = "fixed";
+                textArea.style.left = "-999999px";
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                } catch (err) {
+                    console.error('Fallback: Copying failed', err);
+                }
+                document.body.removeChild(textArea);
+            }
+
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            toastMessage.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+
+        // Skill Filter Tabs
+        const skillButtons = document.querySelectorAll('#skillFilters .skill-btn');
+        const skillCards = document.querySelectorAll('.skill-card');
+
+        skillButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                skillButtons.forEach(b => {
+                    b.classList.remove('bg-accent-500', 'text-white', 'active');
+                    b.classList.add('text-slate-400');
+                });
+                btn.classList.add('bg-accent-500', 'text-white', 'active');
+                btn.classList.remove('text-slate-400');
+
+                const filter = btn.getAttribute('data-filter');
+
+                skillCards.forEach(card => {
+                    const cat = card.getAttribute('data-cat');
+                    if (filter === 'all' || cat === filter) {
+                        card.style.display = 'flex';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
